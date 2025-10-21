@@ -1,13 +1,3 @@
-# vision_align_v3.py
-"""
-VisionAlign v3
-- Curseur de clic pendant calibration
-- 3 points pour pièce et cylindre, 2 pour carte bancaire
-- Relie automatiquement les points : rectangle (carte) ou cercle (pièce/cylindre)
-- Grille visible uniquement après calibration
-- Rotation possible uniquement après calibration, puis verrouillable
-"""
-
 import sys, math
 from PyQt5.QtWidgets import (
     QApplication, QMainWindow, QLabel, QGraphicsView, QGraphicsScene,
@@ -19,7 +9,7 @@ from PyQt5.QtGui import (
 )
 from PyQt5.QtCore import Qt, QPointF, QRectF
 
-# --- Références connues (type, dimensions mm) ---
+# --- Standard references for scaling ---
 PRESETS = {
     "Carte bancaire (85.60 x 53.98 mm)": ("card", (85.60, 53.98)),
     "Pièce 1€ (23.25 mm)": ("coin", 23.25),
@@ -32,7 +22,6 @@ def distance(a, b):
 
 
 class GridView(QGraphicsView):
-    """Vue personnalisée qui dessine la grille seulement après calibration"""
     def __init__(self, scene):
         super().__init__(scene)
         self.px_per_mm = None
@@ -141,7 +130,7 @@ class ImageAligner(QMainWindow):
         self.px_per_mm = None
         self.rotation_locked = False
 
-    # --- Chargement image ---
+    # --- Image loading ---
     def load_image(self):
         path, _ = QFileDialog.getOpenFileName(self, "Ouvrir image", "", "Images (*.png *.jpg *.jpeg *.bmp)")
         if not path:
